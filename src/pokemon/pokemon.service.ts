@@ -27,14 +27,7 @@ export class PokemonService {
 			return newItem;
 			
 		} catch (error: any) {
-			console.error({ error });
-			const defaultMessage = `Error creating new item ${createPokemonDto.name}`;
-
-			if( error?.code === CODE_DUPLICATED_VALUE) {
-				throw new BadRequestException(`Error: Existing pokemon in DB. ${createPokemonDto.name} ${JSON.stringify( error?.keyValue)}`);
-			}
-
-			throw new InternalServerErrorException(defaultMessage);
+			throw this._handleErrors(error);
 		}
 		
 	}
@@ -68,22 +61,51 @@ export class PokemonService {
 			return pokemonSearched as Pokemon;
 
 		} catch (error: any) {
-			console.error({error});
-
-			if(error?.status === STATUS_NOT_FOUND){
-				throw new NotFoundException(`Pokemon not found: ${termSearch}`);
-			}
-
-			throw new InternalServerErrorException(`Error finding pokemon: ${termSearch}`);
+			throw this._handleErrors(error);
 		}
 		 
 	}
 
-	async update(id: string, updatePokemonDto: UpdatePokemonDto) {
-		return `This action updates a #${id} pokemon`;
+	async update(termSearch: string, updatePokemonDto: UpdatePokemonDto): Promise<Pokemon> {
+		
+		try {
+
+			const pokemonDB = await this.findOne(termSearch);
+
+			if(updatePokemonDto.name) {
+				updatePokemonDto.name = updatePokemonDto.name.toLowerCase().trim();
+			}
+
+			await pokemonDB.updateOne(updatePokemonDto, { new: true });
+
+			return {
+				...pokemonDB.toJSON(),
+				...updatePokemonDto
+			}
+			
+		} catch (error: any) {
+			throw this._handleErrors(error)
+		}
+		
 	}
 
 	async remove(id: string) {
 		return `This action removes a #${id} pokemon`;
+	}
+
+	private _handleErrors(error: any): Error {
+
+		console.error({error})
+	
+		if(error?.status === STATUS_NOT_FOUND){
+			throw new NotFoundException(`Pokemon not found. ${error?.keyValue && JSON.stringify(error?.keyValue)}`);
+		}
+	
+		if( error?.code === CODE_DUPLICATED_VALUE) {
+			throw new BadRequestException(`Error: Existing pokemon in DB. ${error?.keyValue && JSON.stringify( error?.keyValue)}`);
+		}
+	
+		throw new InternalServerErrorException(`Internal Server Error`);
+	
 	}
 }

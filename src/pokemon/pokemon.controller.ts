@@ -18,7 +18,7 @@ export class PokemonController {
 	}
 
 	@Get()
-	findAll() {
+	async findAll() {
 		return this.pokemonService.findAll();
 	}
 
@@ -31,13 +31,16 @@ export class PokemonController {
 		return res;
 	}
 
-	@Patch(':id')
-	update(@Param('id') id: string, @Body() updatePokemonDto: UpdatePokemonDto) {
-		return this.pokemonService.update(id, updatePokemonDto);
+	@Patch(':termSearch')
+	async update(
+		@Param('termSearch') termSearch: string, 
+		@Body() updatePokemonDto: UpdatePokemonDto
+	) {
+		return await this.pokemonService.update(termSearch, updatePokemonDto);
 	}
 
 	@Delete(':id')
-	remove(@Param('id') id: string) {
+	async remove(@Param('id') id: string) {
 		return this.pokemonService.remove(id);
 	}
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 // DTOs
 import { CreatePokemonDto } from './dto/create-pokemon.dto.js';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto.js';
@@ -24,8 +24,13 @@ export class PokemonController {
 	}
 
 	@Get()
-	async findAll() {
-		return this.pokemonService.findAll();
+	async findAll(// skip y take no funcionan aun
+		@Param('skip') skip: string, 
+		@Param('take') take: string
+	) {
+		const res = await this.pokemonService.findAll(+skip, +take);
+		//console.log({ res })
+		return res
 	}
 
 	@Get(':termSearch')

@@ -32,8 +32,10 @@ export class PokemonService {
 		
 	}
 
-	async findAll() {
-		return `This action returns all pokemon`;
+	async findAll(skip: number, take: number): Promise<Pokemon[]> { // skip y take no funcionan aun
+		const res = await this._pokemonModel.find()//.skip(skip).limit(take);
+		console.log({ count: res.length, skip, take });
+		return res;
 	}
 
 	async findOne(termSearch: string): Promise<Pokemon> {

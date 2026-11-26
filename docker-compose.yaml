@@ -1,0 +1,13 @@
+version: '8.3.17-noble'
+
+services:
+  db:
+    image: mongo:5
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+        MONGODB_DATABASE: nest-pokedexter
+    volumes:
+     - ./mongo:/data/db
+

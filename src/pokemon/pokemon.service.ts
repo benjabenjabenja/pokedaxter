@@ -18,7 +18,7 @@ export class PokemonService {
 		private readonly _pokemonModel: Model<Pokemon>
 	){}
 
-	async create(createPokemonDto: CreatePokemonDto): Promise<CreatePokemonDto> {
+	async create(createPokemonDto: CreatePokemonDto): Promise<Pokemon> {
 
 		try {
 			createPokemonDto.name = createPokemonDto.name.toLowerCase();
@@ -89,8 +89,19 @@ export class PokemonService {
 		
 	}
 
-	async remove(id: string) {
-		return `This action removes a #${id} pokemon`;
+	async remove(id: string): Promise<void> {
+		try {
+			const pokemonSearched = await this.findOne(id);
+
+			if(!pokemonSearched) {// no encontrado
+				throw new NotFoundException(`Pokemon not found: ${id}`);
+			}
+
+			await pokemonSearched.deleteOne();
+
+		} catch (error: any) {
+			throw this._handleErrors(error);
+		}
 	}
 
 	private _handleErrors(error: any): Error {

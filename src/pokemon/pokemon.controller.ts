@@ -11,9 +11,8 @@ export class PokemonController {
 	@Post()
 	async create(
 		@Body() createPokemonDto: CreatePokemonDto
-	): Promise<CreatePokemonDto> {
+	): Promise<Pokemon> {
 		const res = await this.pokemonService.create(createPokemonDto);
-		console.log({ created: res });
 		return res;
 	}
 
@@ -27,7 +26,6 @@ export class PokemonController {
 		@Param('termSearch') termSearch: string
 	): Promise<Pokemon> {
 		const res = await this.pokemonService.findOne(termSearch);
-		console.log({ res })
 		return res;
 	}
 
@@ -35,12 +33,12 @@ export class PokemonController {
 	async update(
 		@Param('termSearch') termSearch: string, 
 		@Body() updatePokemonDto: UpdatePokemonDto
-	) {
+	): Promise<Pokemon> {
 		return await this.pokemonService.update(termSearch, updatePokemonDto);
 	}
 
 	@Delete(':id')
-	async remove(@Param('id') id: string) {
-		return this.pokemonService.remove(id);
+	async remove(@Param('id') id: string): Promise<void> {
+		return await this.pokemonService.remove(id);
 	}
 }

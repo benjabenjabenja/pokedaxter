@@ -69,7 +69,6 @@ export class PokemonService {
 	async update(termSearch: string, updatePokemonDto: UpdatePokemonDto): Promise<Pokemon> {
 		
 		try {
-
 			const pokemonDB = await this.findOne(termSearch);
 
 			if(updatePokemonDto.name) {
@@ -109,11 +108,11 @@ export class PokemonService {
 		console.error({error})
 	
 		if(error?.status === STATUS_NOT_FOUND){
-			throw new NotFoundException(`Pokemon not found. ${error?.keyValue && JSON.stringify(error?.keyValue)}`);
+			throw new NotFoundException(`Pokemon not found. ${!!error?.keyValue ? JSON.stringify(error?.keyValue) : ''}`);
 		}
 	
 		if( error?.code === CODE_DUPLICATED_VALUE) {
-			throw new BadRequestException(`Error: Existing pokemon in DB. ${error?.keyValue && JSON.stringify( error?.keyValue)}`);
+			throw new BadRequestException(`Error: Existing pokemon in DB. ${!!error?.keyValue ? JSON.stringify(error?.keyValue) : ''}`);
 		}
 	
 		throw new InternalServerErrorException(`Internal Server Error`);

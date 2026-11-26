@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PokemonService } from './pokemon.service.js';
 import { CreatePokemonDto } from './dto/create-pokemon.dto.js';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto.js';
+import { Pokemon } from './entities/pokemon.entity.js';
 
 @Controller('pokemon')
 export class PokemonController {
@@ -21,18 +22,22 @@ export class PokemonController {
 		return this.pokemonService.findAll();
 	}
 
-	@Get(':id')
-	findOne(@Param('id') id: string) {
-		return this.pokemonService.findOne(+id);
+	@Get(':termSearch')
+	async findOne(
+		@Param('termSearch') termSearch: string
+	): Promise<Pokemon> {
+		const res = await this.pokemonService.findOne(termSearch);
+		console.log({ res })
+		return res;
 	}
 
 	@Patch(':id')
 	update(@Param('id') id: string, @Body() updatePokemonDto: UpdatePokemonDto) {
-		return this.pokemonService.update(+id, updatePokemonDto);
+		return this.pokemonService.update(id, updatePokemonDto);
 	}
 
 	@Delete(':id')
 	remove(@Param('id') id: string) {
-		return this.pokemonService.remove(+id);
+		return this.pokemonService.remove(id);
 	}
 }

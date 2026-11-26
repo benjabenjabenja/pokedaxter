@@ -6,10 +6,14 @@ import { UpdatePokemonDto } from './dto/update-pokemon.dto.js';
 import { Pokemon } from './entities/pokemon.entity.js';
 // Service
 import { PokemonService } from './pokemon.service.js';
+// Common
+import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id/parse-mongo-id.pipe.js';
 
 @Controller('pokemon')
 export class PokemonController {
-	constructor(private readonly pokemonService: PokemonService) {}
+	constructor(
+		private readonly pokemonService: PokemonService
+	) {}
 
 	@Post()
 	async create(
@@ -41,7 +45,9 @@ export class PokemonController {
 	}
 
 	@Delete(':id')
-	async remove(@Param('id') id: string): Promise<void> {
+	async remove(
+		@Param('id', ParseMongoIdPipe) id: string
+	): Promise<void> {
 		return await this.pokemonService.remove(id);
 	}
 }

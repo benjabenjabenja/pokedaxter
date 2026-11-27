@@ -19,6 +19,10 @@ import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id/parse-mongo-id.
 				schema: PokemonSchema
 			}
 		])
+	],
+	exports: [
+		//PokemonService,
+		MongooseModule
 	]
 })
 export class PokemonModule {}

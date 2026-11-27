@@ -26,6 +26,11 @@ npm i -g @nestjs/cli
 docker-compose up -d
 ```
 
+5. Crear base de datos (SEED)
+- Buscar la constante DEFAULT_LIMIT_SEED y agregarle la cantidad de pokemons a insertar, luego ejecutar
+```
+http://localhost:3001/api/v0/seed
+```
 
 ## Compile and run the project
 

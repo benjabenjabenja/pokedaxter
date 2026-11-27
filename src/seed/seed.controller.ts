@@ -9,7 +9,8 @@ export class SeedController {
 	async createSeed(
 		@Param('limit') limit: string
 	) {
-		return await this.seedService.createSeed(limit ? +limit : undefined);
+		await this.seedService.createSeed(limit ? +limit : undefined);
+		return 'Seed created successfully'
 	}
 
 }

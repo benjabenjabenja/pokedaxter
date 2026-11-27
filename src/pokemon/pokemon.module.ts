@@ -21,7 +21,8 @@ import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id/parse-mongo-id.
 		])
 	],
 	exports: [
-		PokemonService
+		//PokemonService,
+		MongooseModule
 	]
 })
 export class PokemonModule {}

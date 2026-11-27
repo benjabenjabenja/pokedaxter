@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ConfigService } from '@nestjs/config';
 // model
 import { isValidObjectId, Model } from 'mongoose';
 // dto's
@@ -8,14 +9,18 @@ import { UpdatePokemonDto } from './dto/update-pokemon.dto.js';
 // entities
 import { Pokemon } from './entities/pokemon.entity.js';
 // utils
-import { CODE_DUPLICATED_VALUE, STATUS_NOT_FOUND } from '../utils/const.js';
+import { 
+	CODE_DUPLICATED_VALUE, 
+	STATUS_NOT_FOUND 
+} from '../utils/const.js';
 
 @Injectable()
 export class PokemonService {
 
 	constructor(
 		@InjectModel(Pokemon.name)
-		private readonly _pokemonModel: Model<Pokemon>
+		private readonly _pokemonModel: Model<Pokemon>,
+		private readonly _configService: ConfigService
 	){}
 
 	async create(createPokemonDto: CreatePokemonDto): Promise<Pokemon> {
@@ -32,9 +37,15 @@ export class PokemonService {
 		
 	}
 
-	async findAll(skip: number, take: number): Promise<Pokemon[]> {
+	async findAll(skip: number = 0, take: number | undefined): Promise<Pokemon[]> {
+		console.log({ skip, take })
+		// Existe otra propiedad del Servicio: this._configService.getOrThrow('defaultLimit')
+		// que retorna un error si no existe la propiedad "pedida"
+		const defaultLimit: number = +this._configService.get('defaultLimit') ;
 		try {
-			const res = await this._pokemonModel.find().limit(take).skip(skip);
+			const res = await this._pokemonModel.find()
+												.limit(take ?? defaultLimit )
+												.skip(skip);
 			return res;
 		} catch (error: any) {
 			throw this._handleErrors(error);

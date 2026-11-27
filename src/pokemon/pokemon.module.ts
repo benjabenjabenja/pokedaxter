@@ -8,6 +8,7 @@ import { PokemonController } from './pokemon.controller.js';
 import { Pokemon, PokemonSchema } from './entities/pokemon.entity.js';
 // Pipes
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id/parse-mongo-id.pipe.js';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
 	controllers: [PokemonController],
@@ -18,7 +19,8 @@ import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id/parse-mongo-id.
 				name: Pokemon.name,
 				schema: PokemonSchema
 			}
-		])
+		]),
+		ConfigModule
 	],
 	exports: [
 		//PokemonService,
